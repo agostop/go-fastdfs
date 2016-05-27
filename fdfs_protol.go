@@ -158,7 +158,6 @@ type RequestResponse interface {
 
 type StorageServer struct {
 	ipAddr         string
-	port           int
 	groupName      string
 	storePathIndex int
 }
