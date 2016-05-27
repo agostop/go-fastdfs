@@ -13,5 +13,7 @@ see client_test.go please
 
 Feature     |   Description     |   Author
 ----------  |   ------------        |   --------
-[基础](https://github.com/weilaihui/fdfs_client)    |   基于此项目扩展    |   [@weilaihui](https://github.com/weilaihui)
+[母本](https://github.com/weilaihui/fdfs_client)    |   原始版本    |   [@weilaihui](https://github.com/weilaihui)
+[二次开发](https://github.com/huangqingcheng/go-fastdfs)    |   二次开发    |   [@huangqingcheng](https://github.com/huangqingcheng)
+
 
