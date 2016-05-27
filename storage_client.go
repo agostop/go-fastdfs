@@ -1,4 +1,4 @@
-package fdfs_client
+package fastdfs
 
 import (
 	"errors"

@@ -1,1 +1,1 @@
-package fdfs_client
+package fastdfs
