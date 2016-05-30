@@ -50,7 +50,7 @@ func (this *TrackerClient) trackerQueryStorageStorWithoutGroup() (*StorageServer
 	ipAddr, err = readCstr(buff, IP_ADDRESS_SIZE-1)
 	binary.Read(buff, binary.BigEndian, &port)
 	binary.Read(buff, binary.BigEndian, &storePathIndex)
-	return &StorageServer{fmt.Sprintf("%s:%s", ipAddr, port), groupName, int(storePathIndex)}, nil
+	return &StorageServer{fmt.Sprintf("%s:%d", ipAddr, port), groupName, int(storePathIndex)}, nil
 }
 
 func (this *TrackerClient) trackerQueryStorageStorWithGroup(groupName string) (*StorageServer, error) {
@@ -110,7 +110,7 @@ func (this *TrackerClient) trackerQueryStorageStorWithGroup(groupName string) (*
 	ipAddr, err = readCstr(buff, IP_ADDRESS_SIZE-1)
 	binary.Read(buff, binary.BigEndian, &port)
 	binary.Read(buff, binary.BigEndian, &storePathIndex)
-	return &StorageServer{fmt.Sprintf("%s:%s", ipAddr, port), groupName, int(storePathIndex)}, nil
+	return &StorageServer{fmt.Sprintf("%s:%d", ipAddr, port), groupName, int(storePathIndex)}, nil
 }
 
 func (this *TrackerClient) trackerQueryStorageUpdate(groupName string, remoteFilename string) (*StorageServer, error) {
@@ -182,5 +182,5 @@ func (this *TrackerClient) trackerQueryStorage(groupName string, remoteFilename 
 	ipAddr, err = readCstr(buff, IP_ADDRESS_SIZE-1)
 	binary.Read(buff, binary.BigEndian, &port)
 	binary.Read(buff, binary.BigEndian, &storePathIndex)
-	return &StorageServer{fmt.Sprintf("%s:%s", ipAddr, port), groupName, int(storePathIndex)}, nil
+	return &StorageServer{fmt.Sprintf("%s:%d", ipAddr, port), groupName, int(storePathIndex)}, nil
 }

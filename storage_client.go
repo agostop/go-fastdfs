@@ -90,10 +90,10 @@ func (this *StorageClient) storageUploadFile(tc *TrackerClient,
 	)
 
 	conn, err = this.pool.Get()
-	defer conn.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer conn.Close()
 
 	masterFilenameLen := int64(len(masterFilename))
 	if len(storeServ.groupName) > 0 && len(masterFilename) > 0 {

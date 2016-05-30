@@ -2,7 +2,6 @@ package fastdfs
 
 import (
 	"errors"
-	"runtime"
 
 	"github.com/Sirupsen/logrus"
 )
@@ -41,7 +40,6 @@ type storagePool struct {
 
 func init() {
 	logger.Formatter = new(logrus.TextFormatter)
-	runtime.GOMAXPROCS(runtime.NumCPU())
 	go func() {
 		// start a loop
 		for {
@@ -57,6 +55,7 @@ func init() {
 					)
 					sp, err = NewConnectionPool([]string{ipAddr}, spd.minConns, spd.maxConns)
 					if err != nil {
+						logrus.Warnf("创建%s连接池时出错: %v", ipAddr, err)
 						fetchStoragePoolChan <- err
 					} else {
 						storagePoolMap[ipAddr] = sp
@@ -108,6 +107,10 @@ func (this *FastDFSClient) UploadByBuffer(filebuffer []byte, fileExtName string)
 	}
 
 	storagePool, err := this.getStoragePool(storeServ.ipAddr)
+	if err != nil {
+		logger.Warnf("创建storage连接池时出错: %v", err)
+		return nil, err
+	}
 	store := &StorageClient{storagePool}
 
 	return store.storageUploadByBuffer(tc, storeServ, filebuffer, fileExtName)
@@ -249,12 +252,6 @@ func (this *FastDFSClient) DownloadToBuffer(remoteFileId string, offset int64, d
 }
 
 func (this *FastDFSClient) getStoragePool(ipAddr string) (*ConnectionPool, error) {
-	var (
-		result interface{}
-		err    error
-		ok     bool
-	)
-
 	spd := &storagePool{
 		addr:     ipAddr,
 		minConns: 10,
@@ -263,9 +260,9 @@ func (this *FastDFSClient) getStoragePool(ipAddr string) (*ConnectionPool, error
 	storagePoolChan <- spd
 	for {
 		select {
-		case result = <-fetchStoragePoolChan:
+		case result := <-fetchStoragePoolChan:
 			var storagePool *ConnectionPool
-			if err, ok = result.(error); ok {
+			if err, ok := result.(error); ok {
 				return nil, err
 			} else if storagePool, ok = result.(*ConnectionPool); ok {
 				return storagePool, nil
