@@ -6,7 +6,6 @@ import (
 	"errors"
 	"io"
 	"net"
-	"os"
 )
 
 const (
@@ -286,8 +285,7 @@ func (this *UploadFileResponse) unmarshal(data []byte) error {
 	if err != nil {
 		return err
 	}
-	remoteFilename := string(data[len(data)-buff.Len():])
-	this.RemoteFileId = this.GroupName + string(os.PathSeparator) + remoteFilename
+	this.RemoteFileId = string(data[len(data)-buff.Len():])
 	return nil
 }
 
