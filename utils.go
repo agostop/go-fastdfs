@@ -6,8 +6,6 @@ import (
 	"io"
 	"os"
 	"strings"
-
-	"github.com/weilaihui/goconfig/config"
 )
 
 type Errno struct {
@@ -26,14 +24,6 @@ func (e Errno) Error() string {
 }
 
 type FdfsConfigParser struct{}
-
-var (
-	ConfigFile *config.Config
-)
-
-func (this *FdfsConfigParser) Read(filename string) (*config.Config, error) {
-	return config.ReadDefault(filename)
-}
 
 func fdfsCheckFile(filename string) error {
 	if _, err := os.Stat(filename); err != nil {

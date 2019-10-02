@@ -2,12 +2,10 @@ package fastdfs
 
 import (
 	"errors"
-
-	"github.com/Sirupsen/logrus"
 )
 
 var (
-	logger                                          = logrus.New()
+	logger                                          = NewLogger()
 	storagePoolChan      chan *storagePool          = make(chan *storagePool, 1)
 	storagePoolMap       map[string]*ConnectionPool = make(map[string]*ConnectionPool)
 	fetchStoragePoolChan chan interface{}           = make(chan interface{}, 1)
@@ -39,7 +37,6 @@ type storagePool struct {
 }
 
 func init() {
-	logger.Formatter = new(logrus.TextFormatter)
 	go func() {
 		// start a loop
 		for {
@@ -55,7 +52,7 @@ func init() {
 					)
 					sp, err = NewConnectionPool([]string{ipAddr}, spd.minConns, spd.maxConns)
 					if err != nil {
-						logrus.Warnf("创建%s连接池时出错: %v", ipAddr, err)
+						logger.Warn.Println("创建%s连接池时出错: %v", ipAddr, err)
 						fetchStoragePoolChan <- err
 					} else {
 						storagePoolMap[ipAddr] = sp
@@ -108,7 +105,7 @@ func (this *FastDFSClient) UploadByBuffer(filebuffer []byte, fileExtName string)
 
 	storagePool, err := this.getStoragePool(storeServ.ipAddr)
 	if err != nil {
-		logger.Warnf("创建storage连接池时出错: %v", err)
+		logger.Error.Println("创建storage连接池时出错: %v", err)
 		return nil, err
 	}
 	store := &StorageClient{storagePool}
